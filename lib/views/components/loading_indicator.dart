@@ -1,4 +1,4 @@
-part of '../view.dart';
+part of '../views.dart';
 
 class LoadingIndicator extends StatelessWidget {
   @override

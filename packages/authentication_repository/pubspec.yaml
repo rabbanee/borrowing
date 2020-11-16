@@ -3,6 +3,8 @@ description: Dart package which manages the authentication domain.
 version: 1.0.0
 
 environment:
-  sdk: '>=2.1.0 <3.0.0'
+  sdk: '>=2.7.0 <3.0.0'
 dependencies:
-  meta: ^1.1.8
+  meta: ^1.2.3
+  http: ^0.12.2
+  flutter_secure_storage: ^3.3.5

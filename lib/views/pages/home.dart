@@ -1,4 +1,4 @@
-part of '../view.dart';
+part of '../views.dart';
 
 class HomePage extends StatelessWidget {
   static Route route() {
@@ -15,10 +15,10 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Builder(
               builder: (context) {
-                final userId = context.select(
-                  (AuthenticationBloc bloc) => bloc.state.user.id,
+                final user = context.select(
+                  (AuthenticationBloc bloc) => bloc.state.user,
                 );
-                return Text('UserID: $userId');
+                return Text('User Email: ${user.id}');
               },
             ),
             RaisedButton(

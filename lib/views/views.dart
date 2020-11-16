@@ -5,7 +5,8 @@ import 'package:borrowing/bloc/bloc.dart';
 import 'package:formz/formz.dart';
 
 part 'components/login_form.dart';
-part 'components/loadingIndicator.dart';
-part 'pages/login_page.dart';
-part 'pages/splash_page.dart';
-part 'pages/home_page.dart';
+part 'components/loading_indicator.dart';
+part 'pages/login.dart';
+part 'pages/register.dart';
+part 'pages/splash.dart';
+part 'pages/home.dart';

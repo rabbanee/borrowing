@@ -1,4 +1,4 @@
-part of '../view.dart';
+part of '../views.dart';
 
 class LoginForm extends StatelessWidget {
   @override
@@ -36,77 +36,49 @@ class LoginForm extends StatelessWidget {
             children: [
               SizedBox(height: 60),
               Container(
-                  child: Column(
-                children: [
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey[200]),
+                child: Column(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey[200]),
+                        ),
                       ),
+                      child: _EmailInput(),
                     ),
-                    child: _EmailInput(),
-                  ),
-                  Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey[200]),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey[200]),
+                        ),
                       ),
+                      child: _PasswordInput(),
                     ),
-                    child: _PasswordInput(),
-                  ),
-                  SizedBox(height: 30),
-                  _LoginButton(),
-                  // Container(
-                  //   height: 50,
-                  //   margin: EdgeInsets.symmetric(horizontal: 40),
-                  //   decoration: BoxDecoration(
-                  //       borderRadius: BorderRadius.circular(50),
-                  //       color: Colors.purple),
-                  //   child: Center(
-                  //     child: Text(
-                  //       "Login",
-                  //       style: TextStyle(
-                  //           color: Colors.white,
-                  //           fontWeight: FontWeight.bold,
-                  //           fontSize: 15),
-                  //     ),
-                  //   ),
-                  // ),
-                  SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "create account ",
-                        style: TextStyle(color: Colors.grey, fontSize: 13),
-                      ),
-                      Text(
-                        "Register",
-                        style: TextStyle(color: Colors.purple, fontSize: 13),
-                      )
-                    ],
-                  )
-                ],
-              ))
+                    SizedBox(height: 30),
+                    _LoginButton(),
+                    SizedBox(height: 50),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "create account ",
+                          style: TextStyle(color: Colors.grey, fontSize: 13),
+                        ),
+                        Text(
+                          "Register",
+                          style: TextStyle(color: Colors.purple, fontSize: 13),
+                        )
+                      ],
+                    )
+                  ],
+                ),
+              )
             ],
           ),
         ],
       ),
-      // child: Align(
-      //   alignment: const Alignment(0, -1 / 3),
-      //   child: Column(
-      //     mainAxisSize: MainAxisSize.min,
-      //     children: [
-      //       _EmailInput(),
-      //       const Padding(padding: EdgeInsets.all(12)),
-      //       _PasswordInput(),
-      //       const Padding(padding: EdgeInsets.all(12)),
-      //       _LoginButton(),
-      //     ],
-      //   ),
-      // ),
     );
   }
 }

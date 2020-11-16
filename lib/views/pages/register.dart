@@ -1,21 +1,6 @@
-import 'package:flutter/material.dart';
+part of '../views.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Register',
-      debugShowCheckedModeBanner: false,
-      home: Login(),
-    );
-  }
-}
-
-class Login extends StatelessWidget {
+class Register extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
