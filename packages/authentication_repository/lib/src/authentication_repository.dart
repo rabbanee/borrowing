@@ -13,7 +13,12 @@ class AuthenticationRepository {
   String token;
 
   Stream<AuthenticationStatus> get status async* {
-    await Future<void>.delayed(const Duration(seconds: 1));
+    token = await storage.read(key: 'token');
+    if (token != null) {
+      yield AuthenticationStatus.authenticated;
+      yield* _controller.stream;
+      return;
+    }
     yield AuthenticationStatus.unauthenticated;
     yield* _controller.stream;
   }
@@ -39,15 +44,27 @@ class AuthenticationRepository {
       print(e);
       _controller.add(AuthenticationStatus.unauthenticated);
     }
-
-    // await Future.delayed(
-    //   const Duration(milliseconds: 300),
-    //   () => _controller.add(AuthenticationStatus.authenticated),
-    // );x
   }
 
-  void logOut() {
-    _controller.add(AuthenticationStatus.unauthenticated);
+  Future<void> logOut() async {
+    token = await storage.read(key: 'token');
+    print('masuk');
+    try {
+      var response =
+          await http.get('https://pinjaman-api.herokuapp.com/api/logout',
+              headers: ({
+                'Authorization': 'Bearer $token',
+              }));
+      print('masuk; response code: ${response.statusCode}');
+      if (response.statusCode == 200) {
+        await storage.delete(key: 'token');
+        await storage.delete(key: 'user');
+        _controller.add(AuthenticationStatus.unauthenticated);
+      }
+    } catch (e) {
+      print(e);
+      _controller.add(AuthenticationStatus.authenticated);
+    }
   }
 
   void dispose() => _controller.close();
