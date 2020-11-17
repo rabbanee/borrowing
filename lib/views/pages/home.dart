@@ -18,7 +18,10 @@ class HomePage extends StatelessWidget {
                 final user = context.select(
                   (AuthenticationBloc bloc) => bloc.state.user,
                 );
-                return Text('User Email: ${user.id}');
+                if (user != null) {
+                  return Text('User Email: ${user.data.email}');
+                }
+                return Text('null');
               },
             ),
             RaisedButton(

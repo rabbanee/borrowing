@@ -10,13 +10,18 @@ class UserRepository {
   User _user;
 
   Future<User> getUser() async {
+    var response;
     String token = await storage.read(key: 'token');
-    print(token);
     if (_user != null) return _user;
     try {
-      // var reponse = await htt[]
+      response = await http.get(
+          'https://pinjaman-api.herokuapp.com/api/user/detail',
+          headers: {'Authorization': 'Bearer $token'});
     } catch (e) {}
-    return Future.delayed(
-        const Duration(milliseconds: 300), () => _user = User(Uuid().v4()));
+    _user = userFromJson(response.body);
+    print('response from user repo: ${_user.data}');
+    return _user;
+    // return Future.delayed(
+    //     const Duration(milliseconds: 300), () => _user = User(Uuid().v4()));
   }
 }
