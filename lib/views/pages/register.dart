@@ -105,7 +105,7 @@ class Register extends StatelessWidget {
                             style: TextStyle(color: Colors.grey, fontSize: 13)),
                         Text(
                           "Login",
-                          style: TextStyle(color: Colors.purple, fontSize: 13),
+                          style: TextStyle(color: Colors.purple, fontSize: 13, decoration: TextDecoration.underline),
                         )
                       ],
                     )

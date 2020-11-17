@@ -66,10 +66,18 @@ class LoginForm extends StatelessWidget {
                           "create account ",
                           style: TextStyle(color: Colors.grey, fontSize: 13),
                         ),
-                        Text(
-                          "Register",
-                          style: TextStyle(color: Colors.purple, fontSize: 13),
-                        )
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Register()),
+                            );
+                          },
+                          child: Text(
+                            "Register",
+                            style: TextStyle(color: Colors.purple, fontSize: 13),
+                          )
+                        ),
                       ],
                     )
                   ],
