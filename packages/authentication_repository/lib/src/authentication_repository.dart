@@ -46,6 +46,39 @@ class AuthenticationRepository {
     }
   }
 
+  Future<void> register({
+    @required String name,
+    @required String email,
+    @required String password,
+    @required String role,
+    @required String parentEmail,
+  }) async {
+    assert(name != null);
+    assert(email != null);
+    assert(password != null);
+    assert(role != null);
+    assert(parentEmail != null);
+
+    try {
+      var response =
+      await http.post('https://pinjaman-api.herokuapp.com/api/register',
+          body: ({
+            'name': name,
+            'email': email,
+            'password': password,
+            'c_password': password,
+            'role': role,
+            'parent_email': parentEmail,
+          }));
+      token = (tokenFromJson(response.body)).data.token;
+      await storage.write(key: 'token', value: token);
+      _controller.add(AuthenticationStatus.authenticated);
+    } catch (e) {
+      print(e);
+      _controller.add(AuthenticationStatus.unauthenticated);
+    }
+  }
+
   Future<void> logOut() async {
     token = await storage.read(key: 'token');
     print('masuk');
