@@ -7,8 +7,11 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(172, 13, 206, 1),
+      body: Center(
+        child: Image.asset('assets/images/logo_transparent_white.png'),
+      ),
     );
   }
 }
