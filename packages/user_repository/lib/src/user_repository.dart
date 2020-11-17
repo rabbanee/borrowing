@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:uuid/uuid.dart';
 import 'package:http/http.dart' as http;
 
 import 'models/models.dart';

@@ -1,6 +1,6 @@
-# borrowing
+# Loan
 
-A new Flutter project.
+A new Flutter project for loaning laptop or smartphone.
 
 ## Getting Started
 

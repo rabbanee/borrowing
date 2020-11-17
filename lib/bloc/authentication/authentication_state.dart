@@ -8,6 +8,8 @@ class AuthenticationState extends Equatable {
 
   const AuthenticationState.unknown() : this._();
 
+  const AuthenticationState.loading() : this._();
+
   const AuthenticationState.authenticated(User user)
       : this._(status: AuthenticationStatus.authenticated, user: user);
 
@@ -19,4 +21,6 @@ class AuthenticationState extends Equatable {
 
   @override
   List<Object> get props => [status, user];
+
+  copyWith({status}) {}
 }
