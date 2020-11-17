@@ -106,15 +106,6 @@ class _EmailInput extends StatelessWidget {
           ),
           style: TextStyle(fontSize: 15),
         );
-        // return TextField(
-        //   key: const Key('loginForm_emailInput_textField'),
-        //   onChanged: (email) =>
-        //       context.read<LoginBloc>().add(LoginEmailChanged(email)),
-        //   decoration: InputDecoration(
-        //     labelText: 'email',
-        //     errorText: state.email.invalid ? 'invalid email' : null,
-        //   ),
-        // );
       },
     );
   }
@@ -146,21 +137,6 @@ class _PasswordInput extends StatelessWidget {
         );
       },
     );
-    // return BlocBuilder<LoginBloc, LoginState>(
-    //   buildWhen: (previous, current) => previous.password != current.password,
-    //   builder: (context, state) {
-    //     return TextField(
-    //       key: const Key('loginForm_passwordInput_textField'),
-    //       onChanged: (password) =>
-    //           context.read<LoginBloc>().add(LoginPasswordChanged(password)),
-    //       obscureText: true,
-    //       decoration: InputDecoration(
-    //         labelText: 'password',
-    //         errorText: state.password.invalid ? 'invalid password' : null,
-    //       ),
-    //     );
-    //   },
-    // );
   }
 }
 

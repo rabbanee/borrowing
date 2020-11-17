@@ -47,6 +47,9 @@ class _AppViewState extends State<AppView> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
+      theme: ThemeData(
+        primaryColor: Color.fromRGBO(172, 13, 206, 1),
+      ),
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
@@ -62,6 +65,13 @@ class _AppViewState extends State<AppView> {
                   LoginPage.route(),
                   (route) => false,
                 );
+                break;
+              case AuthenticationStatus.loading:
+                _navigator.pushAndRemoveUntil<void>(LoadingIndicator.route(),
+                    (route) {
+                  print('masuk');
+                  return false;
+                });
                 break;
               default:
                 break;

@@ -7,21 +7,30 @@ class LoginPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.white,
-          child: BlocProvider(
-            create: (context) {
-              return LoginBloc(
-                authenticationRepository:
-                    RepositoryProvider.of<AuthenticationRepository>(context),
+    return BlocBuilder<AuthenticationBloc, AuthenticationState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        print('state status: ${state.status}');
+        return state.status == AuthenticationStatus.loading
+            ? LoadingIndicator()
+            : Scaffold(
+                body: SingleChildScrollView(
+                  child: Container(
+                    color: Colors.white,
+                    child: BlocProvider(
+                      create: (context) {
+                        return LoginBloc(
+                          authenticationRepository:
+                              RepositoryProvider.of<AuthenticationRepository>(
+                                  context),
+                        );
+                      },
+                      child: LoginForm(),
+                    ),
+                  ),
+                ),
               );
-            },
-            child: LoginForm(),
-          ),
-        ),
-      ),
+      },
     );
   }
 }
