@@ -1,6 +1,16 @@
 part of '../views.dart';
 
-class RegisterForm extends StatelessWidget {
+class RegisterForm extends StatefulWidget{
+  @override
+  _Register createState() => _Register();
+}
+
+// ignore: non_constant_identifier_names
+Container _ParentEmailControl = Container(
+  child: Text(''),
+);
+
+class _Register extends State<RegisterForm> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<RegisterBloc, RegisterState>(
@@ -59,6 +69,22 @@ class RegisterForm extends StatelessWidget {
                               bottom: BorderSide(color: Colors.grey[200]))),
                       child: _PasswordInput2(),
                     ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[200]))),
+                      child: _CPasswordInput(),
+                    ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[200]))),
+                      child: _RoleInput(),
+                    ),
+                    _ParentEmailControl,
                     SizedBox(height: 30),
                     _RegisterButton(),
                     SizedBox(height: 50),
@@ -82,6 +108,7 @@ class RegisterForm extends StatelessWidget {
                         )
                       ],
                     ),
+                    SizedBox(height: 30.0,),
                   ],
                 ),
               ),
@@ -89,6 +116,59 @@ class RegisterForm extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _RoleInput extends StatefulWidget {
+  @override
+  _RoleForm createState() => _RoleForm();
+}
+
+class _RoleForm extends State<_RoleInput> {
+  String _roleItem;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegisterBloc, RegisterState>(
+      buildWhen: (previous, current) => previous.role != current.role,
+      builder: (context, state) {
+        return DropdownButton(
+          key: const Key('RegisterForm_roleInput_textField'),
+          value: _roleItem,
+          onChanged: (role) {
+            context.read<RegisterBloc>().add(RegisterRoleChanged(role));
+            if (role == 'student') {
+              setState(() {
+                _ParentEmailControl = Container(
+                  padding: EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          bottom: BorderSide(color: Colors.grey[200]))),
+                  child: _ParentEmailInput(),
+                );
+              });
+            } else {
+              setState(() {
+                _ParentEmailControl = Container(
+                  child: Text(''),
+                );
+              });
+            }
+            setState(() {
+              _roleItem = role;
+            });
+          },
+          hint: Text('Select Role'),
+          items: ['teacher', 'musyrif', 'student'].map((item) {
+            return DropdownMenuItem(
+              child: Text(item),
+              value: item,
+            );
+          }).toList(),
+          // style: TextStyle(fontSize: 15),
+        );
+      },
     );
   }
 }
@@ -172,6 +252,63 @@ class _PasswordInput2 extends StatelessWidget {
           ),
           style: TextStyle(fontSize: 15),
           obscureText: true,
+        );
+      },
+    );
+  }
+}
+
+class _CPasswordInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegisterBloc, RegisterState>(
+      buildWhen: (previous, current) => previous.cPassword != current.cPassword,
+      builder: (context, state) {
+        return TextField(
+          key: const Key('RegisterForm_cPasswordInput_textField'),
+          onChanged: (cPassword) =>
+              context.read<RegisterBloc>().add(RegisterCPasswordChanged(cPassword)),
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.lock_clock),
+            hintText: "Confirm Password",
+            hintStyle: TextStyle(color: Colors.grey),
+            fillColor: Colors.white,
+            errorText: state.cPassword.invalid ? 'invalid password' : (state.cPassword.value != state.password.value) ? 'password not match' : null ,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
+          ),
+          style: TextStyle(fontSize: 15),
+          obscureText: true,
+        );
+      },
+    );
+  }
+}
+
+class _ParentEmailInput extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<RegisterBloc, RegisterState>(
+      buildWhen: (previous, current) => previous.parentEmail != current.parentEmail,
+      builder: (context, state) {
+        return TextField(
+          key: const Key('RegisterForm_parentEmailInput_textField'),
+          onChanged: (parentEmail) =>
+              context.read<RegisterBloc>().add(RegisterParentEmailChanged(parentEmail)),
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.mark_email_unread),
+            hintText: "Parent Email",
+            hintStyle: TextStyle(color: Colors.grey),
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(25),
+              borderSide: BorderSide(color: Colors.grey),
+            ),
+            errorText: state.parentEmail.invalid ? 'invalid email' : null,
+          ),
+          style: TextStyle(fontSize: 15),
         );
       },
     );

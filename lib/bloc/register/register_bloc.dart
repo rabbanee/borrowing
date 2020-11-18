@@ -31,11 +31,24 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       yield _mapPasswordChangedToState(event, state);
     } else if (event is RegisterCPasswordChanged) {
       yield _mapCPasswordChangedToState(event, state);
+    } else if (event is RegisterRoleChanged) {
+      yield _mapRoleChangedToState(event, state);
     } else if (event is RegisterParentEmailChanged) {
       yield _mapParentEmailChangedToState(event, state);
     } else if (event is RegisterSubmitted) {
       yield* _mapRegisterSubmittedToState(event, state);
     }
+  }
+
+  RegisterState _mapRoleChangedToState(
+      RegisterRoleChanged event,
+      RegisterState state,
+      ) {
+    final role = event.role;
+    return state.copyWith(
+      role: role,
+      status: Formz.validate([state.name, state.password, state.email, state.cPassword, state.parentEmail]),
+    );
   }
 
   RegisterState _mapNameChangedToState(
@@ -105,7 +118,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
           email: state.email.value,
           password: state.password.value,
           role: state.role,
-          parentEmail: state.parentEmail.value
+          parentEmail: state.parentEmail.value,
         );
         if (response == 'error') {
           yield state.copyWith(status: FormzStatus.submissionFailure);
