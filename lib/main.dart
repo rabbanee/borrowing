@@ -6,7 +6,8 @@ import 'package:user_repository/user_repository.dart';
 
 void main() {
   runApp(App(
-    authenticationRepository: AuthenticationRepository(),
-    userRepository: UserRepository(),
+    authenticationRepository: AuthenticationRepository(
+      userRepository: UserRepository(),
+    ),
   ));
 }

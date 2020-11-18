@@ -11,7 +11,11 @@ class UserRepository {
   Future<User> getUser() async {
     var response;
     String token = await storage.read(key: 'token');
-    if (_user != null) return _user;
+    String user = await storage.read(key: 'user');
+    if (user != null) {
+      _user = userFromJson(user);
+      return _user;
+    }
     try {
       response = await http.get(
           'https://pinjaman-api.herokuapp.com/api/user/detail',
@@ -20,8 +24,8 @@ class UserRepository {
       print('error getting user: $e');
       return _user;
     }
-    print(response);
     _user = userFromJson(response.body);
+    await storage.write(key: 'user', value: response.body.toString());
     return _user;
   }
 }

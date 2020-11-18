@@ -8,7 +8,9 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(
+        title: const Text('Home'),
+      ),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -18,10 +20,7 @@ class HomePage extends StatelessWidget {
                 final user = context.select(
                   (AuthenticationBloc bloc) => bloc.state.user,
                 );
-                if (user != null) {
-                  return Text('User Email: ${user.data.email}');
-                }
-                return Text('null');
+                return Text('User Email: ${user.data.email}');
               },
             ),
             RaisedButton(

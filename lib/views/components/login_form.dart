@@ -67,18 +67,19 @@ class LoginForm extends StatelessWidget {
                           style: TextStyle(color: Colors.grey, fontSize: 13),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => RegisterPage()),
-                                  (route) => false,
-                            );
-                          },
-                          child: Text(
-                            "Register",
-                            style: TextStyle(color: Colors.purple, fontSize: 13),
-                          )
-                        ),
+                            onTap: () {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => RegisterPage()),
+                                (route) => false,
+                              );
+                            },
+                            child: Text(
+                              "Register",
+                              style:
+                                  TextStyle(color: Colors.purple, fontSize: 13),
+                            )),
                       ],
                     )
                   ],
@@ -103,7 +104,7 @@ class _EmailInput extends StatelessWidget {
           onChanged: (email) =>
               context.read<LoginBloc>().add(LoginEmailChanged(email)),
           decoration: InputDecoration(
-            prefixIcon: Icon(Icons.person),
+            prefixIcon: Icon(Icons.email),
             hintText: "Email",
             hintStyle: TextStyle(color: Colors.grey),
             fillColor: Colors.white,

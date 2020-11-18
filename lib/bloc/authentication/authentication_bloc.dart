@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -13,11 +14,8 @@ class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
   AuthenticationBloc({
     @required AuthenticationRepository authenticationRepository,
-    @required UserRepository userRepository,
   })  : assert(authenticationRepository != null),
-        assert(userRepository != null),
         _authenticationRepository = authenticationRepository,
-        _userRepository = userRepository,
         super(const AuthenticationState.unknown()) {
     _authenticationStatusSubscription = _authenticationRepository.status.listen(
       (status) => add(AuthenticationStatusChanged(status)),
@@ -25,8 +23,9 @@ class AuthenticationBloc
   }
 
   final AuthenticationRepository _authenticationRepository;
-  final UserRepository _userRepository;
   StreamSubscription<AuthenticationStatus> _authenticationStatusSubscription;
+  final storage = new FlutterSecureStorage();
+  String user;
 
   @override
   Stream<AuthenticationState> mapEventToState(
@@ -53,22 +52,12 @@ class AuthenticationBloc
       case AuthenticationStatus.unauthenticated:
         return const AuthenticationState.unauthenticated();
       case AuthenticationStatus.authenticated:
-        print('getting user...');
-        final user = await _tryGetUser();
+        user = await storage.read(key: 'user');
         return user != null
-            ? AuthenticationState.authenticated(user)
-            : const AuthenticationState.unauthenticated();
+            ? AuthenticationState.authenticated(userFromJson(user))
+            : const AuthenticationState.authenticatedFailure();
       default:
         return const AuthenticationState.unknown();
-    }
-  }
-
-  Future<User> _tryGetUser() async {
-    try {
-      final user = await _userRepository.getUser();
-      return user;
-    } on Exception {
-      return null;
     }
   }
 }

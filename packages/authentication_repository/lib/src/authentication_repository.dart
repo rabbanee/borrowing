@@ -4,10 +4,22 @@ import 'package:authentication_repository/src/models/models.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:user_repository/user_repository.dart';
 
-enum AuthenticationStatus { unknown, authenticated, unauthenticated }
+enum AuthenticationStatus {
+  unknown,
+  authenticated,
+  unauthenticated,
+  authenticatedFailure
+}
 
 class AuthenticationRepository {
+  AuthenticationRepository({
+    @required UserRepository userRepository,
+  })  : assert(userRepository != null),
+        _userRepository = userRepository;
+
+  UserRepository _userRepository;
   final _controller = StreamController<AuthenticationStatus>();
   final storage = new FlutterSecureStorage();
   String token;
@@ -40,8 +52,17 @@ class AuthenticationRepository {
       if (response.statusCode != 200) {
         return 'error';
       }
+
       token = (tokenFromJson(response.body)).data.token;
       await storage.write(key: 'token', value: token);
+
+      print('ini token: $token');
+      final user = await _tryGetUser();
+      if (user == null) {
+        _controller.add(AuthenticationStatus.unauthenticated);
+        return 'error';
+      }
+
       _controller.add(AuthenticationStatus.authenticated);
       return 'success';
     } catch (e) {
@@ -49,6 +70,16 @@ class AuthenticationRepository {
       _controller.add(AuthenticationStatus.unauthenticated);
     }
     return 'error';
+  }
+
+  Future<User> _tryGetUser() async {
+    print('ini repo gais $_userRepository');
+    try {
+      final user = await _userRepository.getUser();
+      return user;
+    } on Exception {
+      return null;
+    }
   }
 
   Future<String> register({

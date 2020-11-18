@@ -8,3 +8,5 @@ dependencies:
   meta: ^1.1.8
   http: ^0.12.2
   flutter_secure_storage: ^3.3.5
+  user_repository:
+    path: ../user_repository
