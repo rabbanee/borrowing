@@ -11,31 +11,30 @@ class RegisterPage extends StatelessWidget {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         print('state status: ${state.status}');
-        return state.status == AuthenticationStatus.loading
+        return state.status == AuthenticationStatus.authenticated
             ? LoadingIndicator()
             : Scaffold(
-          body: Stack(
-            children: [
-              Container(
-                color: Colors.white,
-              ),
-              SingleChildScrollView(
-                child: Container(
-                  child: BlocProvider(
-                    create: (context) {
-                      return RegisterBloc(
-                        authenticationRepository:
-                        RepositoryProvider.of<AuthenticationRepository>(
-                            context),
-                      );
-                    },
-                    child: RegisterForm(),
-                  ),
+                body: Stack(
+                  children: [
+                    Container(
+                      color: Colors.white,
+                    ),
+                    SingleChildScrollView(
+                      child: Container(
+                        child: BlocProvider(
+                          create: (context) {
+                            return RegisterBloc(
+                              authenticationRepository: RepositoryProvider.of<
+                                  AuthenticationRepository>(context),
+                            );
+                          },
+                          child: RegisterForm(),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        );
+              );
       },
     );
   }

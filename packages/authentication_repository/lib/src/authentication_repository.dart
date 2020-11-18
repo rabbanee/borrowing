@@ -66,21 +66,21 @@ class AuthenticationRepository {
 
     try {
       var response =
-        await http.post('https://pinjaman-api.herokuapp.com/api/register',
-          body: ({
-            'name': name,
-            'email': email,
-            'password': password,
-            'c_password': password,
-            'role': role,
-            'parent_email': parentEmail,
-          }));
+          await http.post('https://pinjaman-api.herokuapp.com/api/register',
+              body: ({
+                'name': name,
+                'email': email,
+                'password': password,
+                'c_password': password,
+                'role': role,
+                'parent_email': parentEmail,
+              }));
       if (response.statusCode != 200) {
         return 'error';
       }
       token = (tokenFromJson(response.body)).data.token;
       await storage.write(key: 'token', value: token);
-      _controller.add(AuthenticationStatus.loading);
+      _controller.add(AuthenticationStatus.authenticated);
       return 'success';
     } catch (e) {
       print(e);
