@@ -100,13 +100,16 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     if (state.status.isValidated) {
       yield state.copyWith(status: FormzStatus.submissionInProgress);
       try {
-        await _authenticationRepository.register(
+        String response = await _authenticationRepository.register(
           name: state.name.value,
           email: state.email.value,
           password: state.password.value,
           role: state.role,
           parentEmail: state.parentEmail.value
         );
+        if (response == 'error') {
+          yield state.copyWith(status: FormzStatus.submissionFailure);
+        }
         yield state.copyWith(status: FormzStatus.submissionSuccess);
       } on Exception catch (_) {
         yield state.copyWith(status: FormzStatus.submissionFailure);

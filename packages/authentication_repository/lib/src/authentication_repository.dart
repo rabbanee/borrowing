@@ -51,7 +51,7 @@ class AuthenticationRepository {
     return 'error';
   }
 
-  Future<void> register({
+  Future<String> register({
     @required String name,
     @required String email,
     @required String password,
@@ -66,7 +66,7 @@ class AuthenticationRepository {
 
     try {
       var response =
-      await http.post('https://pinjaman-api.herokuapp.com/api/register',
+        await http.post('https://pinjaman-api.herokuapp.com/api/register',
           body: ({
             'name': name,
             'email': email,
@@ -75,13 +75,18 @@ class AuthenticationRepository {
             'role': role,
             'parent_email': parentEmail,
           }));
+      if (response.statusCode != 200) {
+        return 'error';
+      }
       token = (tokenFromJson(response.body)).data.token;
       await storage.write(key: 'token', value: token);
-      _controller.add(AuthenticationStatus.authenticated);
+      _controller.add(AuthenticationStatus.loading);
+      return 'success';
     } catch (e) {
       print(e);
       _controller.add(AuthenticationStatus.unauthenticated);
     }
+    return 'error';
   }
 
   Future<void> logOut() async {

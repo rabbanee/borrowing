@@ -7,6 +7,7 @@ import 'package:borrowing/bloc/bloc.dart';
 import 'package:formz/formz.dart';
 
 part 'components/login_form.dart';
+part 'components/regis_form.dart';
 part 'components/loading_indicator.dart';
 part 'pages/login.dart';
 part 'pages/register.dart';

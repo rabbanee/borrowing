@@ -68,9 +68,10 @@ class LoginForm extends StatelessWidget {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => Register()),
+                              MaterialPageRoute(builder: (context) => RegisterPage()),
+                                  (route) => false,
                             );
                           },
                           child: Text(
