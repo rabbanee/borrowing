@@ -66,13 +66,6 @@ class _AppViewState extends State<AppView> {
                   (route) => false,
                 );
                 break;
-              case AuthenticationStatus.loading:
-                _navigator.pushAndRemoveUntil<void>(LoadingIndicator.route(),
-                    (route) {
-                  print('masuk');
-                  return false;
-                });
-                break;
               default:
                 break;
             }

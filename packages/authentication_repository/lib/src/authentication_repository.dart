@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-enum AuthenticationStatus { unknown, loading, authenticated, unauthenticated }
+enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
   final _controller = StreamController<AuthenticationStatus>();
@@ -42,7 +42,7 @@ class AuthenticationRepository {
       }
       token = (tokenFromJson(response.body)).data.token;
       await storage.write(key: 'token', value: token);
-      _controller.add(AuthenticationStatus.loading);
+      _controller.add(AuthenticationStatus.authenticated);
       return 'success';
     } catch (e) {
       print('error: $e');

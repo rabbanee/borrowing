@@ -68,7 +68,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         if (response == 'error') {
           yield state.copyWith(status: FormzStatus.submissionFailure);
         }
-        yield state.copyWith(status: FormzStatus.submissionSuccess);
+
+        if (response == 'success') {
+          yield state.copyWith(status: FormzStatus.submissionInProgress);
+        }
       } on Exception catch (_) {
         yield state.copyWith(status: FormzStatus.submissionFailure);
       }

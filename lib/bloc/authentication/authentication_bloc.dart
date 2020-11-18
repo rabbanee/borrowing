@@ -52,7 +52,8 @@ class AuthenticationBloc
     switch (event.status) {
       case AuthenticationStatus.unauthenticated:
         return const AuthenticationState.unauthenticated();
-      case AuthenticationStatus.loading:
+      case AuthenticationStatus.authenticated:
+        print('getting user...');
         final user = await _tryGetUser();
         return user != null
             ? AuthenticationState.authenticated(user)

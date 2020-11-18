@@ -16,11 +16,12 @@ class UserRepository {
       response = await http.get(
           'https://pinjaman-api.herokuapp.com/api/user/detail',
           headers: {'Authorization': 'Bearer $token'});
-    } catch (e) {}
+    } catch (e) {
+      print('error getting user: $e');
+      return _user;
+    }
+    print(response);
     _user = userFromJson(response.body);
-    print('response from user repo: ${_user.data}');
     return _user;
-    // return Future.delayed(
-    //     const Duration(milliseconds: 300), () => _user = User(Uuid().v4()));
   }
 }
