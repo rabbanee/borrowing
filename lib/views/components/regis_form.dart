@@ -1,14 +1,9 @@
 part of '../views.dart';
 
-class RegisterForm extends StatefulWidget{
+class RegisterForm extends StatefulWidget {
   @override
   _Register createState() => _Register();
 }
-
-// ignore: non_constant_identifier_names
-Container _ParentEmailControl = Container(
-  child: Text(''),
-);
 
 class _Register extends State<RegisterForm> {
   @override
@@ -22,6 +17,15 @@ class _Register extends State<RegisterForm> {
               const SnackBar(content: Text('Authentication Failure')),
             );
         }
+        if (state.status.isSubmissionSuccess) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              const SnackBar(
+                  content: Text(
+                      'Registration Success! please check your email for verification.')),
+            );
+        }
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -32,7 +36,8 @@ class _Register extends State<RegisterForm> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Register",
+                Text(
+                  "Register",
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 30,
@@ -84,7 +89,14 @@ class _Register extends State<RegisterForm> {
                               bottom: BorderSide(color: Colors.grey[200]))),
                       child: _RoleInput(),
                     ),
-                    _ParentEmailControl,
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          border: Border(
+                              bottom: BorderSide(color: Colors.grey[200]))),
+                      child: _ParentEmailInput(),
+                    ),
                     SizedBox(height: 30),
                     _RegisterButton(),
                     SizedBox(height: 50),
@@ -97,18 +109,24 @@ class _Register extends State<RegisterForm> {
                           onTap: () {
                             Navigator.pushAndRemoveUntil(
                               context,
-                              MaterialPageRoute(builder: (context) => LoginPage()),
-                                  (route) => false,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginPage()),
+                              (route) => false,
                             );
                           },
                           child: Text(
                             "Login",
-                            style: TextStyle(color: Colors.purple, fontSize: 13, decoration: TextDecoration.underline),
+                            style: TextStyle(
+                                color: Colors.purple,
+                                fontSize: 13,
+                                decoration: TextDecoration.underline),
                           ),
                         )
                       ],
                     ),
-                    SizedBox(height: 30.0,),
+                    SizedBox(
+                      height: 30.0,
+                    ),
                   ],
                 ),
               ),
@@ -138,23 +156,6 @@ class _RoleForm extends State<_RoleInput> {
           value: _roleItem,
           onChanged: (role) {
             context.read<RegisterBloc>().add(RegisterRoleChanged(role));
-            if (role == 'student') {
-              setState(() {
-                _ParentEmailControl = Container(
-                  padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      border: Border(
-                          bottom: BorderSide(color: Colors.grey[200]))),
-                  child: _ParentEmailInput(),
-                );
-              });
-            } else {
-              setState(() {
-                _ParentEmailControl = Container(
-                  child: Text(''),
-                );
-              });
-            }
             setState(() {
               _roleItem = role;
             });
@@ -237,8 +238,9 @@ class _PasswordInput2 extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('RegisterForm_passwordInput_textField'),
-          onChanged: (password) =>
-              context.read<RegisterBloc>().add(RegisterPasswordChanged(password)),
+          onChanged: (password) => context
+              .read<RegisterBloc>()
+              .add(RegisterPasswordChanged(password)),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.lock),
             hintText: "Password",
@@ -266,14 +268,19 @@ class _CPasswordInput extends StatelessWidget {
       builder: (context, state) {
         return TextField(
           key: const Key('RegisterForm_cPasswordInput_textField'),
-          onChanged: (cPassword) =>
-              context.read<RegisterBloc>().add(RegisterCPasswordChanged(cPassword)),
+          onChanged: (cPassword) => context
+              .read<RegisterBloc>()
+              .add(RegisterCPasswordChanged(cPassword)),
           decoration: InputDecoration(
             prefixIcon: Icon(Icons.lock_clock),
             hintText: "Confirm Password",
             hintStyle: TextStyle(color: Colors.grey),
             fillColor: Colors.white,
-            errorText: state.cPassword.invalid ? 'invalid password' : (state.cPassword.value != state.password.value) ? 'password not match' : null ,
+            errorText: state.cPassword.invalid
+                ? 'invalid password'
+                : (state.cPassword.value != state.password.value)
+                    ? 'password not match'
+                    : null,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide(color: Colors.grey),
@@ -291,25 +298,30 @@ class _ParentEmailInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<RegisterBloc, RegisterState>(
-      buildWhen: (previous, current) => previous.parentEmail != current.parentEmail,
+      buildWhen: (previous, current) =>
+          previous.parentEmail != current.parentEmail ||
+          previous.role != current.role,
       builder: (context, state) {
-        return TextField(
-          key: const Key('RegisterForm_parentEmailInput_textField'),
-          onChanged: (parentEmail) =>
-              context.read<RegisterBloc>().add(RegisterParentEmailChanged(parentEmail)),
-          decoration: InputDecoration(
-            prefixIcon: Icon(Icons.mark_email_unread),
-            hintText: "Parent Email",
-            hintStyle: TextStyle(color: Colors.grey),
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(color: Colors.grey),
-            ),
-            errorText: state.parentEmail.invalid ? 'invalid email' : null,
-          ),
-          style: TextStyle(fontSize: 15),
-        );
+        return state.role == 'student'
+            ? TextField(
+                key: const Key('RegisterForm_parentEmailInput_textField'),
+                onChanged: (parentEmail) => context
+                    .read<RegisterBloc>()
+                    .add(RegisterParentEmailChanged(parentEmail)),
+                decoration: InputDecoration(
+                  prefixIcon: Icon(Icons.mark_email_unread),
+                  hintText: "Parent Email",
+                  hintStyle: TextStyle(color: Colors.grey),
+                  fillColor: Colors.white,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(25),
+                    borderSide: BorderSide(color: Colors.grey),
+                  ),
+                  errorText: state.parentEmail.invalid ? 'invalid email' : null,
+                ),
+                style: TextStyle(fontSize: 15),
+              )
+            : Text('');
       },
     );
   }
@@ -324,33 +336,35 @@ class _RegisterButton extends StatelessWidget {
         return state.status.isSubmissionInProgress
             ? const CircularProgressIndicator()
             : Container(
-          height: 50,
-          margin: EdgeInsets.symmetric(horizontal: 40),
-          width: double.infinity,
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(50),
-              color: Colors.purple),
-          child: RaisedButton(
-            key: const Key('RegisterForm_continue_raisedButton'),
-            color: Colors.purple,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(50),
-              side: BorderSide(color: Colors.purple),
-            ),
-            child: const Text(
-              'Register',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15),
-            ),
-            onPressed: state.status.isValidated
-                ? () {
-              context.read<RegisterBloc>().add(const RegisterSubmitted());
-            }
-                : null,
-          ),
-        );
+                height: 50,
+                margin: EdgeInsets.symmetric(horizontal: 40),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Colors.purple),
+                child: RaisedButton(
+                  key: const Key('RegisterForm_continue_raisedButton'),
+                  color: Colors.purple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50),
+                    side: BorderSide(color: Colors.purple),
+                  ),
+                  child: const Text(
+                    'Register',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15),
+                  ),
+                  onPressed: state.status.isValidated
+                      ? () {
+                          context
+                              .read<RegisterBloc>()
+                              .add(const RegisterSubmitted());
+                        }
+                      : null,
+                ),
+              );
       },
     );
   }

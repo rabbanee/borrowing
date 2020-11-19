@@ -10,7 +10,10 @@ class SplashPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Color.fromRGBO(172, 13, 206, 1),
       body: Center(
-        child: Image.asset('assets/images/logo_transparent_white.png'),
+        child: Image.asset(
+          'assets/images/logo_transparent_white.png',
+          width: 150,
+        ),
       ),
     );
   }

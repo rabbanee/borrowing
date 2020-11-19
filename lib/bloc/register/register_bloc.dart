@@ -41,24 +41,46 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   RegisterState _mapRoleChangedToState(
-      RegisterRoleChanged event,
-      RegisterState state,
-      ) {
+    RegisterRoleChanged event,
+    RegisterState state,
+  ) {
     final role = event.role;
-    return state.copyWith(
-      role: role,
-      status: Formz.validate([state.name, state.password, state.email, state.cPassword, state.parentEmail]),
-    );
+    return role == 'student'
+        ? state.copyWith(
+            role: role,
+            status: Formz.validate([
+              state.name,
+              state.password,
+              state.email,
+              state.cPassword,
+              state.parentEmail
+            ]),
+          )
+        : state.copyWith(
+            role: role,
+            status: Formz.validate([
+              state.name,
+              state.password,
+              state.email,
+              state.cPassword,
+            ]),
+          );
   }
 
   RegisterState _mapNameChangedToState(
-      RegisterNameChanged event,
-      RegisterState state,
-      ) {
+    RegisterNameChanged event,
+    RegisterState state,
+  ) {
     final name = Name.dirty(event.name);
     return state.copyWith(
       name: name,
-      status: Formz.validate([name, state.password, state.email, state.cPassword, state.parentEmail]),
+      status: Formz.validate([
+        name,
+        state.password,
+        state.email,
+        state.cPassword,
+        state.parentEmail
+      ]),
     );
   }
 
@@ -69,7 +91,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     final email = Email.dirty(event.email);
     return state.copyWith(
       email: email,
-      status: Formz.validate([state.name, state.password, email, state.cPassword, state.parentEmail]),
+      status: Formz.validate([
+        state.name,
+        state.password,
+        email,
+        state.cPassword,
+        state.parentEmail
+      ]),
     );
   }
 
@@ -80,7 +108,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     final password = Password.dirty(event.password);
     return state.copyWith(
       password: password,
-      status: Formz.validate([state.name, password, state.email, state.cPassword, state.parentEmail]),
+      status: Formz.validate([
+        state.name,
+        password,
+        state.email,
+        state.cPassword,
+        state.parentEmail
+      ]),
     );
   }
 
@@ -91,7 +125,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     final cPassword = Password.dirty(event.cPassword);
     return state.copyWith(
       cPassword: cPassword,
-      status: Formz.validate([state.name, state.password, state.email, cPassword, state.parentEmail]),
+      status: Formz.validate([
+        state.name,
+        state.password,
+        state.email,
+        cPassword,
+        state.parentEmail
+      ]),
     );
   }
 
@@ -102,7 +142,13 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
     final parentEmail = Email.dirty(event.parentEmail);
     return state.copyWith(
       parentEmail: parentEmail,
-      status: Formz.validate([state.name, state.password, state.email, state.cPassword, parentEmail]),
+      status: Formz.validate([
+        state.name,
+        state.password,
+        state.email,
+        state.cPassword,
+        parentEmail
+      ]),
     );
   }
 
@@ -122,6 +168,7 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
         );
         if (response == 'error') {
           yield state.copyWith(status: FormzStatus.submissionFailure);
+          return;
         }
         yield state.copyWith(status: FormzStatus.submissionSuccess);
       } on Exception catch (_) {

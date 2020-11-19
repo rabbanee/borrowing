@@ -96,6 +96,7 @@ class AuthenticationRepository {
     assert(parentEmail != null);
 
     try {
+      print('name: $name, email: $email. parenEmail: $parentEmail');
       var response =
           await http.post('https://pinjaman-api.herokuapp.com/api/register',
               body: ({
@@ -106,12 +107,10 @@ class AuthenticationRepository {
                 'role': role,
                 'parent_email': parentEmail,
               }));
+      print('body: ${response.statusCode}');
       if (response.statusCode != 200) {
         return 'error';
       }
-      token = (tokenFromJson(response.body)).data.token;
-      await storage.write(key: 'token', value: token);
-      _controller.add(AuthenticationStatus.authenticated);
       return 'success';
     } catch (e) {
       print(e);
@@ -139,6 +138,27 @@ class AuthenticationRepository {
       print(e);
       _controller.add(AuthenticationStatus.authenticated);
     }
+  }
+
+  Future<String> resetPassword({
+    @required String email,
+  }) async {
+    assert(email != null);
+    try {
+      var response = await http.post(
+          'https://pinjaman-api.herokuapp.com/api/forgot-password',
+          body: ({
+            'email': email,
+          }));
+      if (response.statusCode != 200) {
+        return 'error';
+      }
+      return 'success';
+    } catch (e) {
+      print('error: $e');
+      _controller.add(AuthenticationStatus.unauthenticated);
+    }
+    return 'error';
   }
 
   void dispose() => _controller.close();

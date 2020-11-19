@@ -63,7 +63,7 @@ class LoginForm extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "create account ",
+                          "Don't have an account? ",
                           style: TextStyle(color: Colors.grey, fontSize: 13),
                         ),
                         GestureDetector(
@@ -81,7 +81,21 @@ class LoginForm extends StatelessWidget {
                                   TextStyle(color: Colors.purple, fontSize: 13),
                             )),
                       ],
-                    )
+                    ),
+                    SizedBox(height: 30),
+                    GestureDetector(
+                        onTap: () {
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ForgotPasswordPage()),
+                            (route) => false,
+                          );
+                        },
+                        child: Text(
+                          "Forgot Password?",
+                          style: TextStyle(color: Colors.purple, fontSize: 13),
+                        )),
                   ],
                 ),
               )
