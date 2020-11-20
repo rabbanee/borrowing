@@ -43,7 +43,7 @@ class _AppViewState extends State<AppView> {
       debugShowCheckedModeBanner: false,
       navigatorKey: _navigatorKey,
       theme: ThemeData(
-        primaryColor: Color.fromRGBO(172, 13, 206, 1),
+        primaryColor: Colors.purple[700],
       ),
       builder: (context, child) {
         return BlocListener<AuthenticationBloc, AuthenticationState>(
