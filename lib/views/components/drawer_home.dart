@@ -17,7 +17,7 @@ class DrawerHome extends StatelessWidget {
                 accountEmail: new Text('${user.data.email}'),
                 currentAccountPicture: new CircleAvatar(
                   backgroundImage: NetworkImage(
-                      "https://raw.githubusercontent.com/ArkanAdil/gambars/master/mantap.jpg"),
+                      "https://pinjaman-api.herokuapp.com/api/file/image/${user.data.avatarId}"),
                 ),
                 decoration: BoxDecoration(
                   color: Colors.purple,

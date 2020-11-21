@@ -30,6 +30,7 @@ class User extends Equatable {
       // updatedAt: new DateTime.now(),
       parentEmail: '-',
       penalty: 0,
+      avatarId: 1,
       role: ['student'],
     ),
   );
@@ -48,6 +49,7 @@ class Data {
     this.updatedAt,
     this.parentEmail,
     this.penalty,
+    this.avatarId,
     this.role,
   });
 
@@ -59,6 +61,7 @@ class Data {
   final DateTime updatedAt;
   final String parentEmail;
   final int penalty;
+  final int avatarId;
   final List<String> role;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
@@ -70,6 +73,7 @@ class Data {
         updatedAt: DateTime.parse(json["updated_at"]),
         parentEmail: json["parent_email"],
         penalty: json["penalty"],
+        avatarId: json["avatar_id"],
         role: List<String>.from(json["role"].map((x) => x)),
       );
 
@@ -82,6 +86,7 @@ class Data {
         "updated_at": updatedAt.toIso8601String(),
         "parent_email": parentEmail,
         "penalty": penalty,
+        "avatar_id": avatarId,
         "role": List<dynamic>.from(role.map((x) => x)),
       };
 }

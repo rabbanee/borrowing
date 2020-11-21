@@ -31,6 +31,8 @@ dependencies:
   email_validator: ^1.0.5
   http: ^0.12.2
   flutter_secure_storage: ^3.3.5
+  flutter_config: ^1.0.7
+  shimmer: ^1.1.2
   authentication_repository:
     path: packages/authentication_repository
   user_repository:

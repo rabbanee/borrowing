@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:borrowing/bloc/bloc.dart';
 import 'package:formz/formz.dart';
+import 'package:shimmer/shimmer.dart';
+import '../view_models/view_models.dart';
+import 'package:borrowing/models/models.dart';
 
 part 'components/recent.dart';
 part 'components/drawer_home.dart';
