@@ -68,12 +68,24 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(30),
                           color: Colors.purple[200]),
                       child: Center(
-                        child: Text(
-                          "Borrow The Laptop",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BorrowPage(
+                                  borrow: 'Laptop',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Borrow The Laptop",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
@@ -85,12 +97,24 @@ class HomePage extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50),
                           color: Colors.purple[300]),
                       child: Center(
-                        child: Text(
-                          "Borrow The HandPhone",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => BorrowPage(
+                                  borrow: 'Handphone',
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            "Borrow The Handphone",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15),
+                          ),
                         ),
                       ),
                     ),
