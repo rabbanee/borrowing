@@ -17,12 +17,21 @@ class BorrowReasonChanged extends BorrowEvent {
 }
 
 class BorrowDateChanged extends BorrowEvent {
-  const BorrowDateChanged(this.borrowDate);
+  BorrowDateChanged(this.borrowDate);
 
   final String borrowDate;
 
   @override
   List<Object> get props => [borrowDate];
+}
+
+class BorrowNecessityChanged extends BorrowEvent {
+  BorrowNecessityChanged(this.necessity);
+
+  final String necessity;
+
+  @override
+  List<Object> get props => [necessity];
 }
 
 class BorrowTeacherInChargeChanged extends BorrowEvent {

@@ -24,11 +24,24 @@ class _DateInputState extends State<DateInput> {
       lastDate: DateTime(2025),
     );
     if (picked != null && picked != selectedDate) {
+      final String borrowDate = _dateFormat.format(picked);
       _controllerDate..text = DateFormat.yMMMd().format(picked);
       selectedDate = picked;
-      context
-          .read<BorrowBloc>()
-          .add(const BorrowDateChanged(_dateFormat.format(selectedDate)));
+      final state = BlocProvider.of<BorrowBloc>(context).state;
+      // print('ini state cuy: ${state.borrowDate}');
+      resetReasonOrTeacher(state.borrowDate.value, borrowDate);
+      context.read<BorrowBloc>().add(BorrowDateChanged(borrowDate));
+    }
+  }
+
+  void resetReasonOrTeacher(before, after) {
+    if ((before == _dateFormat.format(DateTime.now()) &&
+            after != _dateFormat.format(DateTime.now())) ||
+        (before != _dateFormat.format(DateTime.now()) &&
+            after == _dateFormat.format(DateTime.now()))) {
+      print('masuk');
+      context.read<BorrowBloc>().add(BorrowTeacherInChargeChanged(''));
+      context.read<BorrowBloc>().add(BorrowReasonChanged(''));
     }
   }
 
@@ -39,7 +52,7 @@ class _DateInputState extends State<DateInput> {
           previous.borrowDate != current.borrowDate,
       builder: (context, state) {
         return TextField(
-          key: const Key('BorrowForm_reasonInput_textField'),
+          key: const Key('BorrowForm_borrowDateInput_textField'),
           controller: _controllerDate,
           decoration: InputDecoration(
             labelText: "Date",
@@ -51,7 +64,7 @@ class _DateInputState extends State<DateInput> {
               borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide(color: Colors.grey),
             ),
-            errorText: state.reason.invalid ? 'invalid reason' : null,
+            errorText: state.borrowDate.invalid ? 'invalid borrow date' : null,
           ),
           style: TextStyle(fontSize: 15),
           onTap: () => _selectDate(context),

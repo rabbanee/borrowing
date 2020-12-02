@@ -1,6 +1,6 @@
 import 'package:formz/formz.dart';
 
-enum BorrowDateValidationError { empty, invalid }
+enum BorrowDateValidationError { empty }
 
 class BorrowDate extends FormzInput<String, BorrowDateValidationError> {
   const BorrowDate.pure() : super.pure('');

@@ -9,10 +9,37 @@ class BorrowForm extends StatefulWidget {
 
 class _BorrowFormState extends State<BorrowForm> {
   String date = new DateFormat('yyyy-MM-dd').format(DateTime.now());
+  Users _teacher;
+  Users _musyrif;
 
   void initState() {
     context.read<BorrowBloc>().add(BorrowDateChanged(this.date));
+    context
+        .read<BorrowBloc>()
+        .add(BorrowNecessityChanged('Borrow The ${widget.borrow}'));
     super.initState();
+    getListUser('musyrif');
+    getListUser('teacher');
+  }
+
+  getListUser(role) async {
+    final result = await getUsersByRole(role: role);
+    if (result == null) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => HomePage(),
+        ),
+      );
+    }
+    setState(() {
+      if (role == 'teacher') {
+        _teacher = result;
+      } else {
+        _musyrif = result;
+      }
+    });
+    print(result.user[0].id);
   }
 
   @override
@@ -23,7 +50,13 @@ class _BorrowFormState extends State<BorrowForm> {
           Scaffold.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              const SnackBar(content: Text('Authentication Failure')),
+              SnackBar(content: Text('Failed to borrow ${widget.borrow}')),
+            );
+        } else if (state.status.isSubmissionSuccess) {
+          Scaffold.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text('Success to borrow ${widget.borrow}')),
             );
         }
       },
@@ -85,7 +118,8 @@ class _BorrowFormState extends State<BorrowForm> {
                           ),
                         ),
                       ),
-                      child: TeacherInChargeInput(),
+                      child: TeacherInChargeInput(
+                          teacher: _teacher, musyrif: _musyrif),
                     ),
                     SizedBox(height: 30),
                     _BorrowButton(),
@@ -105,10 +139,12 @@ class _ReasonInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<BorrowBloc, BorrowState>(
-      buildWhen: (previous, current) => previous.reason != current.reason,
+      buildWhen: (previous, current) =>
+          previous.reason != current.reason ||
+          previous.borrowDate != current.borrowDate,
       builder: (context, state) {
-        print(state.borrowDate.value);
-        if (state.borrowDate.value == '') {
+        if (state.borrowDate.value !=
+            new DateFormat('yyyy-MM-dd').format(DateTime.now())) {
           return Text('');
         }
         return TextField(
@@ -157,7 +193,7 @@ class _BorrowButton extends StatelessWidget {
                     side: BorderSide(color: Colors.purple),
                   ),
                   child: const Text(
-                    'Borrow',
+                    'Next',
                     style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
