@@ -35,9 +35,8 @@ class HomePage extends StatelessWidget {
           ),
         ],
       ),
-      drawer: DrawerHome(),
-      body: SingleChildScrollView(
-        child: Container(
+      drawer: Hamburger(route: 'Home'),
+      body:Container(
           width: MediaQuery.of(context).size.width,
           height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
@@ -122,11 +121,11 @@ class HomePage extends StatelessWidget {
                 ),
               ),
               SizedBox(height: 50),
-              Recent(),
+              Recent(
+                  isPage: false, page: 1, perPage: 3, title: 'Recent Request'),
             ],
           ),
         ),
-      ),
     );
   }
 }

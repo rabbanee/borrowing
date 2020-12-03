@@ -1,22 +1,35 @@
 part of '../views.dart';
 
 class Recent extends StatefulWidget {
+  Recent(
+      {Key key,
+      @required this.isPage,
+      @required this.page,
+      @required this.perPage,
+      @required this.title})
+      : super(key: key);
+  final bool isPage;
+  final String title;
+  final int page;
+  final int perPage;
   @override
   _RecentState createState() => _RecentState();
 }
 
 class _RecentState extends State<Recent> {
-  LoaningHistory _recentRequest;
+  List<dynamic> _historyRequest = [];
+  int _currentPage = 1;
+  int _lastPage = 0;
   bool isLoading = false;
 
-  Future getRecentRequest({page = 1}) async {
-    var result = await getHistoryLoaning(page: page, perPage: 3);
-    print('result: $result');
+  Future getRecentRequest({page: 1}) async {
+    if (_currentPage == _lastPage) {
+      return;
+    }
+    var result = await getHistoryLoaning(page: page, perPage: widget.perPage);
     setState(() {
-      _recentRequest = result;
-    });
-
-    setState(() {
+      _historyRequest.addAll(result.data.data);
+      _lastPage = result.data.lastPage;
       isLoading = false;
     });
   }
@@ -37,35 +50,48 @@ class _RecentState extends State<Recent> {
   @override
   Widget build(BuildContext context) {
     return Builder(builder: (context) {
-      final user = context.select((AuthenticationBloc bloc) => bloc.state.user);
       return Expanded(
-        child: SizedBox.expand(
-          child: Container(
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                )),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (!isLoading &&
+                scrollInfo.metrics.pixels ==
+                    scrollInfo.metrics.maxScrollExtent &&
+                widget.isPage == true) {
+              getRecentRequest(page: _currentPage + 1);
+              setState(() {
+                isLoading = true;
+                _currentPage = _currentPage + 1;
+              });
+            }
+          },
+          child: SizedBox.expand(
             child: Container(
-              height: MediaQuery.of(context).size.height,
-              margin: EdgeInsets.symmetric(horizontal: 30),
-              padding: EdgeInsets.only(top: 20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${user.data.role[0] == 'student' ? 'Recent Request' : ''}',
-                    style: TextStyle(
-                        color: Colors.purple[700],
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 15),
-                  _recentRequest != null
-                      ? listRecent(_recentRequest.data.data)
-                      : shimmer(isLoading)
-                ],
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40),
+                  )),
+              child: Container(
+                height: double.infinity,
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                padding: EdgeInsets.only(top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '${widget.title}',
+                      style: TextStyle(
+                          color: Colors.purple[700],
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(height: 15),
+                    _lastPage > 0
+                        ? listRecent(_historyRequest)
+                        : shimmer(isLoading)
+                  ],
+                ),
               ),
             ),
           ),
@@ -73,109 +99,185 @@ class _RecentState extends State<Recent> {
       );
     });
   }
-}
 
-Widget shimmer(enabled) {
-  return Expanded(
-    child: Shimmer.fromColors(
-      baseColor: Colors.grey[300],
-      highlightColor: Colors.grey[100],
-      enabled: enabled,
-      child: ListView.builder(
-        itemBuilder: (_, __) => Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 15),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(
-                      width: double.infinity,
-                      height: 18.0,
-                      color: Colors.white,
+  Widget listRecent(list) {
+    if (list.length > 0) {
+      return Expanded(
+        child: CustomScrollView(
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          primary: false,
+          // physics: const NeverScrollableScrollPhysics(),
+          slivers: [
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int i) {
+                  return Dismissible(
+                    direction: DismissDirection.startToEnd,
+                    confirmDismiss: (direction) =>
+                        dismissibleAction(direction, context, list[i]),
+                    background: Container(
+                      color: Colors.green,
+                      child: Align(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              " Return",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w700,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
+                        ),
+                        alignment: Alignment.centerLeft,
+                      ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 2.0),
+                    key: Key(i.toString()),
+                    child: Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(color: Colors.grey[200]),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            child: Text('${i + 1}',
+                                style: TextStyle(
+                                    color: Colors.purple,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          Text('${list[i].necessity}',
+                              style: TextStyle(
+                                  fontSize: 15, fontWeight: FontWeight.bold)),
+                          Column(
+                            children: [
+                              Text('${list[i].created}',
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 13)),
+                              Text(
+                                '${list[i].approved == null ? 'Pending' : list[i].approved ? 'Approved' : 'Rejected'}',
+                                style:
+                                    TextStyle(color: Colors.grey, fontSize: 13),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                    Container(
-                      width: double.infinity,
-                      height: 18.0,
-                      color: Colors.white,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 2.0),
-                    ),
-                    Container(
-                      width: 40.0,
-                      height: 18.0,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
+                  );
+                },
+                childCount: list.length,
+              ),
+            ),
+          ],
         ),
-        itemCount: 3,
-      ),
-    ),
-  );
-}
+      );
+    } else {
+      return Text('Empty Guys');
+    }
+  }
 
-Widget listRecent(list) {
-  if (list.length > 0) {
-    return CustomScrollView(
-      scrollDirection: Axis.vertical,
-      shrinkWrap: true,
-      primary: false,
-      physics: const NeverScrollableScrollPhysics(),
-      slivers: [
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int i) {
-              return Container(
-                padding: EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(color: Colors.grey[200]),
+  Widget shimmer(enabled) {
+    return Expanded(
+      child: Shimmer.fromColors(
+        baseColor: Colors.grey[300],
+        highlightColor: Colors.grey[100],
+        enabled: enabled,
+        child: ListView.builder(
+          itemBuilder: (_, __) => Padding(
+            padding: const EdgeInsets.only(bottom: 8.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        width: double.infinity,
+                        height: 18.0,
+                        color: Colors.white,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        height: 18.0,
+                        color: Colors.white,
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 2.0),
+                      ),
+                      Container(
+                        width: 40.0,
+                        height: 18.0,
+                        color: Colors.white,
+                      ),
+                    ],
                   ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      child: Text('${i + 1}',
-                          style: TextStyle(
-                              color: Colors.purple,
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold)),
-                    ),
-                    Text('${list[i].necessity}',
-                        style: TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.bold)),
-                    Column(
-                      children: [
-                        Text('${list[i].created}',
-                            style: TextStyle(color: Colors.grey, fontSize: 13)),
-                        Text(
-                          '${list[i].approved == null ? 'Pending' : list[i].approved ? 'Approved' : 'Rejected'}',
-                          style: TextStyle(color: Colors.grey, fontSize: 13),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              );
-            },
-            childCount: list.length,
+                )
+              ],
+            ),
           ),
+          itemCount: widget.perPage,
         ),
-      ],
+      ),
     );
+  }
+}
+
+Future<bool> dismissibleAction(direction, context, list) async {
+  print('ini list ${list.necessity}');
+  if (direction == DismissDirection.startToEnd) {
+    final bool res = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text("Are you sure you want to delete?"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  "Cancel",
+                  style: TextStyle(color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: Text(
+                  "Delete",
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () {
+                  // TODO: Delete the item from DB etc..
+                  // setState(() {
+                  //   // itemsList.removeAt(index);
+                  // });
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+    return res;
   } else {
-    return Text('Empty Guys');
+    // TODO: Navigate to edit page;
   }
 }

@@ -1,6 +1,15 @@
 part of '../views.dart';
 
-class DrawerHome extends StatelessWidget {
+class Hamburger extends StatefulWidget {
+  Hamburger({Key key, @required this.route}) : super(key: key);
+  final String route;
+  @override
+  _HamburgerState createState() => _HamburgerState();
+}
+
+class _HamburgerState extends State<Hamburger> {
+  // String widget.route = 'Home';
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -29,20 +38,34 @@ class DrawerHome extends StatelessWidget {
             leading: Icon(Icons.home),
             title: Text('Home'),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
+              print('masuk: ${widget.route}');
+              if (widget.route == 'Home') {
+                Navigator.pop(context);
+              } else {
+                // setState(() => widget.route = 'Home');
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                  (route) => false,
+                );
+              }
             },
           ),
           ListTile(
             leading: Icon(Icons.history),
             title: Text('History'),
             onTap: () {
-              // Update the state of the app
-              // ...
-              // Then close the drawer
-              Navigator.pop(context);
+              print('masuk');
+              if (widget.route == 'History') {
+                Navigator.pop(context);
+              } else {
+                // setState(() => widget.route = 'History');
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => HistoryRequestPage()),
+                  (route) => false,
+                );
+              }
             },
           ),
           ListTile(

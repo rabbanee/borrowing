@@ -34,7 +34,7 @@ Future getHistoryLoaning({perPage = 5, page = 1}) async {
   try {
     http.Response result = await http.get(
         Uri.parse(
-            'https://pinjaman-api.herokuapp.com/api/history-borrow/$perPage'),
+            'https://pinjaman-api.herokuapp.com/api/history-borrow/$perPage?page=$page'),
         headers: {
           "Accept": "application/json",
           'Authorization': 'Bearer $token'
