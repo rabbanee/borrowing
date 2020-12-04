@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:authentication_repository/authentication_repository.dart';
@@ -9,6 +10,7 @@ import 'package:shimmer/shimmer.dart';
 import '../view_models/view_models.dart';
 import 'package:borrowing/models/models.dart';
 import 'package:intl/intl.dart';
+import 'package:image_picker/image_picker.dart';
 
 part 'components/recent.dart';
 part 'components/hamburger.dart';
@@ -22,6 +24,7 @@ part 'components/navbar.dart';
 part 'components/loading_indicator.dart';
 part 'pages/login.dart';
 part 'pages/borrow.dart';
+part 'pages/return.dart';
 part 'pages/register.dart';
 part 'pages/splash.dart';
 part 'pages/home.dart';

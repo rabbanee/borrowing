@@ -243,33 +243,20 @@ class _RecentState extends State<Recent> {
 }
 
 Future<bool> dismissibleAction(direction, context, list) async {
-  print('ini list ${list.necessity}');
-  if (direction == DismissDirection.startToEnd) {
+  if (direction == DismissDirection.startToEnd && list.approved != true) {
     final bool res = await showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            content: Text("Are you sure you want to delete?"),
+            content: Text(
+                "You can't return because borrowing status is not approved!"),
             actions: <Widget>[
               FlatButton(
                 child: Text(
-                  "Cancel",
+                  "Ok",
                   style: TextStyle(color: Colors.black),
                 ),
                 onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-              FlatButton(
-                child: Text(
-                  "Delete",
-                  style: TextStyle(color: Colors.red),
-                ),
-                onPressed: () {
-                  // TODO: Delete the item from DB etc..
-                  // setState(() {
-                  //   // itemsList.removeAt(index);
-                  // });
                   Navigator.of(context).pop();
                 },
               ),
@@ -278,6 +265,15 @@ Future<bool> dismissibleAction(direction, context, list) async {
         });
     return res;
   } else {
-    // TODO: Navigate to edit page;
+    print('clicked!');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReturnPage(
+          borrowingId: list.id.toString(),
+        ),
+      ),
+    );
   }
+  return false;
 }

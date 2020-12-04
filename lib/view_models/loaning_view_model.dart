@@ -28,6 +28,37 @@ Future requestBorrow({necessity, teacherInCharge, borrowDate, reason}) async {
   }
 }
 
+Future returnBorrowing({image, description, borrowingId}) async {
+  final storage = new FlutterSecureStorage();
+  String token = await storage.read(key: 'token');
+  Response response;
+  Dio dio = new Dio();
+  String fileName = image.path.split('/').last;
+
+  FormData formData = new FormData.fromMap({
+    "description": description,
+    "image": await MultipartFile.fromFile(image.path, filename: fileName),
+  });
+  dio.options.headers["Authorization"] = "Bearer $token";
+  try {
+    response = await dio.post(
+        "https://pinjaman-api.herokuapp.com/api/assignment/$borrowingId",
+        data: formData);
+    print(response);
+    return true;
+  } catch (e) {
+    if (e is DioError) {
+      //handle DioError here by error type or by error code
+      print('error dio: ${e.response.data}');
+      return false;
+    } else {
+      // print(e.message);
+      return false;
+    }
+    // print('error: ${e.toString()}');
+  }
+}
+
 Future getHistoryLoaning({perPage = 5, page = 1}) async {
   final storage = new FlutterSecureStorage();
   String token = await storage.read(key: 'token');
