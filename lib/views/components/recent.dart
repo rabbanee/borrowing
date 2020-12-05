@@ -20,6 +20,7 @@ class _RecentState extends State<Recent> {
   List<dynamic> _historyRequest = [];
   int _currentPage = 1;
   int _lastPage = 0;
+  bool tes = true;
   bool isLoading = false;
 
   Future getRecentRequest({page: 1}) async {
@@ -34,6 +35,16 @@ class _RecentState extends State<Recent> {
     });
   }
 
+  Future getHistoryTeacher() async {
+    var result = await getLoaningHistoryTeacher();
+    setState(() {
+      _historyRequest.addAll(result.data);
+      _lastPage = 1;
+      tes = false;
+      isLoading = false;
+    });
+  }
+
   void initState() {
     super.initState();
     setState(() {
@@ -43,7 +54,7 @@ class _RecentState extends State<Recent> {
     if (user.data.role[0] == 'student') {
       getRecentRequest();
     } else {
-      // TO DO: get list approval for musyrif or teacher
+      getHistoryTeacher();
     }
   }
 
@@ -115,7 +126,8 @@ class _RecentState extends State<Recent> {
                   return Dismissible(
                     direction: DismissDirection.startToEnd,
                     confirmDismiss: (direction) =>
-                        dismissibleAction(direction, context, list[i]),
+                      tes ? dismissibleAction(direction, context, list[i])
+                      : dismissibleActionTeacher(direction, context, list[i]),
                     background: Container(
                       color: Colors.green,
                       child: Align(
@@ -271,6 +283,43 @@ Future<bool> dismissibleAction(direction, context, list) async {
       MaterialPageRoute(
         builder: (context) => ReturnPage(
           borrowingId: list.id.toString(),
+        ),
+      ),
+    );
+  }
+  return false;
+}
+
+Future<bool> dismissibleActionTeacher(direction, context, list) async {
+  if (direction == DismissDirection.startToEnd && list.approved == true) {
+    final bool res = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: Text(
+                "You can't return because borrowing status is not approved!"),
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  "Ok",
+                  style: TextStyle(color: Colors.black),
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+    return res;
+  } else {
+    print('clicked!');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ApprovePage(
+          borrowingId: list.id.toString(),
+          pass: 'Approve',
         ),
       ),
     );

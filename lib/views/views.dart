@@ -23,6 +23,7 @@ part 'components/regis_form.dart';
 part 'components/navbar.dart';
 part 'components/loading_indicator.dart';
 part 'pages/login.dart';
+part 'pages/approve.dart';
 part 'pages/borrow.dart';
 part 'pages/return.dart';
 part 'pages/register.dart';

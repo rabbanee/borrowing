@@ -59,6 +59,33 @@ Future returnBorrowing({image, description, borrowingId}) async {
   }
 }
 
+Future approveData({description = '', approved, borrowingId}) async {
+  final storage = new FlutterSecureStorage();
+  String token = await storage.read(key: 'token');
+  Response response;
+  Dio dio = new Dio();
+
+  FormData formData = new FormData.fromMap({
+    "teacher_reason": description,
+    "approved": approved,
+  });
+  dio.options.headers["Authorization"] = "Bearer $token";
+  try {
+    response = await dio.post(
+        "https://pinjaman-api.herokuapp.com/api/approvement/$borrowingId",
+        data: formData);
+    print(response);
+    return true;
+  } catch (e) {
+    if (e is DioError) {
+      print('error dio: ${e.response.data}');
+      return false;
+    } else {
+      return false;
+    }
+  }
+}
+
 Future getHistoryLoaning({perPage = 5, page = 1}) async {
   final storage = new FlutterSecureStorage();
   String token = await storage.read(key: 'token');
@@ -73,6 +100,28 @@ Future getHistoryLoaning({perPage = 5, page = 1}) async {
     if (result.statusCode == 200) {
       print('Success get data');
       final data = loaningHistoryFromJson(result.body);
+      return data;
+    } else {
+      print('Failed to get data');
+      return null;
+    }
+  } catch (e) {}
+}
+
+Future getLoaningHistoryTeacher() async {
+  final storage = new FlutterSecureStorage();
+  String token = await storage.read(key: 'token');
+  try {
+    http.Response result = await http.get(
+        Uri.parse(
+            'https://pinjaman-api.herokuapp.com/api/list-approval/teacher'),
+        headers: {
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token'
+        });
+    if (result.statusCode == 200) {
+      print('Success get data');
+      final data = historyTeacherFromJson(result.body);
       return data;
     } else {
       print('Failed to get data');

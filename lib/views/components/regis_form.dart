@@ -89,12 +89,7 @@ class _Register extends State<RegisterForm> {
                               bottom: BorderSide(color: Colors.grey[200]))),
                       child: _RoleInput(),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                          border: Border(
-                              bottom: BorderSide(color: Colors.grey[200]))),
+                    SizedBox(
                       child: _ParentEmailInput(),
                     ),
                     SizedBox(height: 30),
@@ -303,25 +298,32 @@ class _ParentEmailInput extends StatelessWidget {
           previous.role != current.role,
       builder: (context, state) {
         return state.role == 'student'
-            ? TextField(
-                key: const Key('RegisterForm_parentEmailInput_textField'),
-                onChanged: (parentEmail) => context
-                    .read<RegisterBloc>()
-                    .add(RegisterParentEmailChanged(parentEmail)),
-                decoration: InputDecoration(
-                  prefixIcon: Icon(Icons.mark_email_unread),
-                  hintText: "Parent Email",
-                  hintStyle: TextStyle(color: Colors.grey),
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: BorderSide(color: Colors.grey),
+            ? Container(
+                padding: EdgeInsets.all(10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    border: Border(
+                        bottom: BorderSide(color: Colors.grey[200]))),
+                child: TextField(
+                  key: const Key('RegisterForm_parentEmailInput_textField'),
+                  onChanged: (parentEmail) => context
+                      .read<RegisterBloc>()
+                      .add(RegisterParentEmailChanged(parentEmail)),
+                  decoration: InputDecoration(
+                    prefixIcon: Icon(Icons.mark_email_unread),
+                    hintText: "Parent Email",
+                    hintStyle: TextStyle(color: Colors.grey),
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                    errorText: state.parentEmail.invalid ? 'invalid email' : null,
                   ),
-                  errorText: state.parentEmail.invalid ? 'invalid email' : null,
+                  style: TextStyle(fontSize: 15),
                 ),
-                style: TextStyle(fontSize: 15),
               )
-            : Text('');
+            : SizedBox();
       },
     );
   }
